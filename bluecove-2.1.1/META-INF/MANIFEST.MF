@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+License: The Apache Software License, Version 2.0
+Description: BlueCove JSR-82 implementation
+Implementation-URL: http://www.bluecove.org/
+Specification-Title: JSR-82
+Specification-Version: 1.1.1
+Specification-Vendor: JCP
+Implementation-Version: 2.1.1-SNAPSHOT
+Implementation-Build: 2.1.1-SNAPSHOT.63
+Built-By: cruisecontrol
+Build-Jdk: 1.6.0_18-b07
+Build-Date: 2010-10-24 05:49:14
+Build-Platform: i386 Linux 2.6.30.10-105.2.23.fc11.i686.PAE
+
