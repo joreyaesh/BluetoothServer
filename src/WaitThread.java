@@ -33,10 +33,16 @@ public class WaitThread implements Runnable{
 		// setup the server to listen for connection
 		try {
 			local = LocalDevice.getLocalDevice();
+			// Generate QR code based on the local device's address
+			QRImage.create(local.getBluetoothAddress());
+			// Display the QR code on the screen
+			UI ui = new UI();
+			ui.run();
+			
 			local.setDiscoverable(DiscoveryAgent.GIAC);
 			
 			UUID uuid = new UUID(2852401); // "002b8631-0000-1000-8000-00805f9b34fb"
-			String url = "btspp://localhost:" + uuid.toString() + ";name=RemoteBluetooth";
+			String url = "btspp://localhost:" + uuid.toString() + ";name=BluetoothRemote";
 			notifier = (StreamConnectionNotifier)Connector.open(url);
 		} catch (Exception e) {
 			e.printStackTrace();
