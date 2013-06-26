@@ -1,4 +1,3 @@
-
 import java.awt.AWTException;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -6,7 +5,9 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import javax.microedition.io.StreamConnection;
 
@@ -24,14 +25,20 @@ public class ProcessConnectionThread implements Runnable{
 	private static final int MOVE_MOUSE_BY = 10;
 	private static final int BACKSPACE = 25;
 	private static final int ENTER = 20;
-	public static final int NEW_TAB = 30;
+	private static final int NEW_TAB = 30;
 	
+	// Robot to control the computer
 	Robot robot = null;
 	
+	// Rectangle representing the screen dimensions
 	Rectangle rectScreen;
 	
+	// Parameters used to track touches on the connected Android device
 	static int x = 0;
 	static int y = 0;
+	
+	// Boolean to keep track of whether or not the bluetooth connection is active
+	public static boolean isActive = false;
 	
 	public ProcessConnectionThread(Rectangle screen, StreamConnection connection)
 	{
@@ -39,29 +46,37 @@ public class ProcessConnectionThread implements Runnable{
 		mConnection = connection;
 	}
 	
+	/**
+	 * Processes the RemoteCommand object from the {@link InputStream}
+	 */
 	@Override
 	public void run() {
-		try {
-			// prepare to receive data
-			InputStream inputStream = mConnection.openDataInputStream();
-			System.out.println("Connected!");
-			while (true) {
-				byte[] data = new byte[1024];
-				inputStream.read(data);
-				
-				if(data != null){
-					RemoteCommand rc = RemoteCommand.getRemoteCommand(data);
-					processCommand(rc);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		try {
 			robot = new Robot();
 		} catch (AWTException e) {
 			e.printStackTrace();
 		}
+		try {
+			// prepare to receive data
+			InputStream inputStream = mConnection.openDataInputStream();
+			System.out.println("Connected!");
+			isActive = true;
+			byte[] data = new byte[1024];
+			while (isActive) {
+				Arrays.fill(data, (byte) 0);
+				try{
+					inputStream.read(data);
+				}catch(NullPointerException e){
+					e.printStackTrace();
+				}catch(IOException e2){
+					e2.printStackTrace();
+				}
+				RemoteCommand rc = RemoteCommand.getRemoteCommand(data);
+				processCommand(rc);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
 	}
 	
 	/**
@@ -69,7 +84,7 @@ public class ProcessConnectionThread implements Runnable{
 	 * @param command the command code
 	 */
 	private void processCommand(RemoteCommand rc) {
-		if(rc.command != 0){
+		try {
 			switch (rc.command) {
 			case MOUSE_RIGHT:
 				rightClick();
@@ -107,6 +122,9 @@ public class ProcessConnectionThread implements Runnable{
 			default:
 				break;
 			}
+		} catch(NullPointerException e) {
+			System.out.println("Connection lost...");
+			isActive = false;
 		}
 	}
 

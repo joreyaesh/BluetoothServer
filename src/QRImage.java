@@ -10,7 +10,7 @@ import net.glxn.qrgen.image.ImageType;
 public class QRImage {
 	public QRImage(String str){
 		ByteArrayOutputStream out = QRCode.from(str)
-				.to(ImageType.PNG).stream();
+				.to(ImageType.PNG).withSize(250, 250).stream();
 
 		try {
 			FileOutputStream fout = new FileOutputStream(new File(

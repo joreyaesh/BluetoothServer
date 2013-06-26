@@ -3,10 +3,12 @@ package com.example;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.io.StreamCorruptedException;
 
 import com.example.RemoteCommand;
 
@@ -24,7 +26,6 @@ public class RemoteCommand implements Serializable {
 	public String string1 = ""; // String for textbox
 
 	public RemoteCommand() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public static RemoteCommand getRemoteCommand(byte data[]) {
@@ -35,10 +36,14 @@ public class RemoteCommand implements Serializable {
 			in = new ObjectInputStream(bis);
 			RemoteCommand ret = (RemoteCommand) in.readObject();
 			return ret;
-		} catch (Exception e) {
-			//e.printStackTrace();
-			System.out.println("Connection Lost:");
-			System.out.println("Attempting to Re-Connect...");
+		} catch (StreamCorruptedException e) {
+			// Do nothing... Connection lost
+		} catch (InvalidClassException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		} finally {
 			try {
 				bis.close();
@@ -61,15 +66,12 @@ public class RemoteCommand implements Serializable {
 			out.writeObject(this);
 			return bos.toByteArray();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
 				out.close();
 				bos.close();
-
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
