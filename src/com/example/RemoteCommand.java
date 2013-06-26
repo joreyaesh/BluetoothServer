@@ -35,17 +35,17 @@ public class RemoteCommand implements Serializable {
 			in = new ObjectInputStream(bis);
 			RemoteCommand ret = (RemoteCommand) in.readObject();
 			return ret;
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			//e.printStackTrace();
+			System.out.println("Connection Lost:");
+			System.out.println("Attempting to Re-Connect...");
 		} finally {
 			try {
 				bis.close();
-				in.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				if(in != null)in.close();
+			} catch (Exception e) {
 				e.printStackTrace();
+				
 			}
 		}
 		return null;

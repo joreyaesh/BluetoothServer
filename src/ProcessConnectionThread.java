@@ -6,7 +6,6 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.io.InputStream;
 
 import javax.microedition.io.StreamConnection;
@@ -45,18 +44,22 @@ public class ProcessConnectionThread implements Runnable{
 		try {
 			// prepare to receive data
 			InputStream inputStream = mConnection.openDataInputStream();
-	        
 			System.out.println("Connected!");
-
 			while (true) {
 				byte[] data = new byte[1024];
 				inputStream.read(data);
+				
 				if(data != null){
 					RemoteCommand rc = RemoteCommand.getRemoteCommand(data);
 					processCommand(rc);
 				}
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			robot = new Robot();
+		} catch (AWTException e) {
 			e.printStackTrace();
 		}
 	}
@@ -66,50 +69,47 @@ public class ProcessConnectionThread implements Runnable{
 	 * @param command the command code
 	 */
 	private void processCommand(RemoteCommand rc) {
-		try {			
-			robot = new Robot();
+		if(rc.command != 0){
 			switch (rc.command) {
-	    		case MOUSE_RIGHT:
-	    			rightClick();
-	    			//System.out.println("Right");
-	    			break;
-	    		case MOUSE_LEFT:
-	    			leftClick();
-	    			//System.out.println("Left");
-	    			break;
-	    		case ENTER:
-	    			enter();
-	    			//System.out.println("Enter");
-	    			break;
-	    		case TYPE:
-	    			type(rc.string1);
-	    			//System.out.println("Type");
-	    			break;
-	    		case MOUSE_SCROLL:
-	    			scroll(rc.parameter1);
-	    			//System.out.println("Scroll");
-	    			break;
-	    		case MOVE_MOUSE_BY:
-	    			moveMouse(rc.parameter1, rc.parameter2);
-	    			//System.out.println("Move Mouse");
-	    			break;
-	    		case BACKSPACE:
-	    			backspace();
-	    			//System.out.println("Backspace");
-	    			break;
-	    		case NEW_TAB:
-	    			newTab();
-	    			//System.out.println("New Tab");
-	    			break;
-	    			
-	    		default:
-	    			break;
+			case MOUSE_RIGHT:
+				rightClick();
+				//System.out.println("Right");
+				break;
+			case MOUSE_LEFT:
+				leftClick();
+				//System.out.println("Left");
+				break;
+			case ENTER:
+				enter();
+				//System.out.println("Enter");
+				break;
+			case TYPE:
+				type(rc.string1);
+				//System.out.println("Type");
+				break;
+			case MOUSE_SCROLL:
+				scroll(rc.parameter1);
+				//System.out.println("Scroll");
+				break;
+			case MOVE_MOUSE_BY:
+				moveMouse(rc.parameter1, rc.parameter2);
+				//System.out.println("Move Mouse");
+				break;
+			case BACKSPACE:
+				backspace();
+				//System.out.println("Backspace");
+				break;
+			case NEW_TAB:
+				newTab();
+				//System.out.println("New Tab");
+				break;
+
+			default:
+				break;
 			}
-		} catch (AWTException e) {
-			e.printStackTrace();
 		}
 	}
-	
+
 	private void newTab(){
 		// simulates a CTRL+T event
 		robot.keyPress(KeyEvent.VK_CONTROL);
