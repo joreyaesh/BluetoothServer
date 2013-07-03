@@ -1,3 +1,5 @@
+package com.example;
+
 import java.awt.AWTException;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -11,13 +13,12 @@ import java.util.Arrays;
 
 import javax.microedition.io.StreamConnection;
 
-import com.example.RemoteCommand;
-
 public class ProcessConnectionThread implements Runnable{
 
 	private StreamConnection mConnection;
 	
 	// Constants that indicate command from devices
+	private static final int CHECK_CONNECTION = -1;
 	private static final int TYPE = 0;
 	private static final int MOUSE_LEFT = 1;
 	private static final int MOUSE_RIGHT = 2;
@@ -117,6 +118,9 @@ public class ProcessConnectionThread implements Runnable{
 			case NEW_TAB:
 				newTab();
 				//System.out.println("New Tab");
+				break;
+			case CHECK_CONNECTION:
+				// Do nothing
 				break;
 
 			default:

@@ -10,8 +10,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
 
-import com.example.RemoteCommand;
-
 public class RemoteCommand implements Serializable {
 	/**
 	 * 
