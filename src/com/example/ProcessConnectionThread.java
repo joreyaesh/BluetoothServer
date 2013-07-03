@@ -5,6 +5,10 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -201,25 +205,14 @@ public class ProcessConnectionThread implements Runnable{
 	}
 	
 	private void type(String s) {
-		byte[] bytes = s.getBytes();
-		for (byte b : bytes) {
-			int code = b;
-			if (code > 96 && code < 123){ // Lower case
-				code = code - 32;
-			}
-			try{
-				robot.keyPress(code);
-				robot.keyRelease(code);
-			}catch(Exception e){
-				//System.err.println("Invalid character code: \"" + code + "\"");
-				if (code == 58){ // ':' character
-					robot.keyPress(KeyEvent.VK_SHIFT);
-					robot.keyPress(KeyEvent.VK_SEMICOLON);
-					robot.keyRelease(KeyEvent.VK_SEMICOLON);
-					robot.keyRelease(KeyEvent.VK_SHIFT);
-				}
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+	    StringSelection characters = new StringSelection(s);
+	    ClipboardOwner instance = null;
+		clipboard.setContents(characters, instance);
 
-			}
-		}
+	    robot.keyPress(KeyEvent.VK_CONTROL);
+	    robot.keyPress(KeyEvent.VK_V);
+	    robot.keyRelease(KeyEvent.VK_V);
+	    robot.keyRelease(KeyEvent.VK_CONTROL);
 	}
 }
