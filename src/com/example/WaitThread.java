@@ -28,7 +28,6 @@ public class WaitThread implements Runnable{
 	
 	/** Waiting for connection from devices */
 	private void waitForConnection() {
-		
 		// Retrieve the local Bluetooth device object
 		LocalDevice local = null;
 		
@@ -82,7 +81,7 @@ public class WaitThread implements Runnable{
 				return;
 			} 
 			
-			// Check if the connection is active every 5 seconds
+			// Only check if the connection is active every 5 seconds
 			try {
 				Thread.sleep(5000);
 			} catch (InterruptedException e) {

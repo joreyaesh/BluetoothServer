@@ -41,7 +41,7 @@ public class UI extends JFrame {
 	 */
 	public UI(){
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(0, 0, 255, 255);
+		setBounds(0, 0, 517, 517);
 		
 		// Position the frame in the middle of the screen
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -59,7 +59,8 @@ public class UI extends JFrame {
 	 * @see UI#restore()
 	 */
 	public void minimize() {
-		frame.setExtendedState(ICONIFIED);
+		//frame.setExtendedState(ICONIFIED);
+		frame.setVisible(false);
 	}
 	
 	/**
@@ -67,7 +68,8 @@ public class UI extends JFrame {
 	 * @see UI#minimize()
 	 */
 	public void restore() {
-		frame.setExtendedState(NORMAL);
+		frame.setVisible(true);
+		//frame.setExtendedState(NORMAL);
 	}
 
 }

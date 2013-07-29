@@ -33,7 +33,7 @@ public class ProcessConnectionThread implements Runnable{
 	private static final int NEW_TAB = 30;
 	
 	// Robot to control the computer
-	Robot robot = null;
+	private Robot robot = null;
 	
 	// Rectangle representing the screen dimensions
 	Rectangle rectScreen;
@@ -132,6 +132,10 @@ public class ProcessConnectionThread implements Runnable{
 			}
 		} catch(NullPointerException e) {
 			System.out.println("Connection lost...");
+			robot.keyPress(KeyEvent.VK_ALT);
+			robot.keyPress(KeyEvent.VK_F4);
+			robot.keyRelease(KeyEvent.VK_F4);
+			robot.keyRelease(KeyEvent.VK_ALT);
 			isActive = false;
 		}
 	}
